@@ -43,8 +43,9 @@ Push those changes to your repository and it should trigger the workflow to buil
 
 The URL to your running app on OpenShift is shown on the GitHub Actions summary:
 
-![Actions](.img/console.png)
+![Actions](.img/action-url.png)
 
 Alternatively, you'll also see the running app on the OpenShift Web Console:
 
-![Actions](.img/action-url.png)
+![Actions](.img/console.png)
+
