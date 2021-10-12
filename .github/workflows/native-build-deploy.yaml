@@ -5,7 +5,7 @@ env:
   REGISTRY_USER: jfalkner1
   IMAGE_REGISTRY: quay.io
   TEST_NAMESPACE: jfalkner1-dev
-  APP_NAME: app
+  APP_NAME: quarkus-actions-demo
   APP_PORT: 8080
   TEAR_DOWN: false
 
