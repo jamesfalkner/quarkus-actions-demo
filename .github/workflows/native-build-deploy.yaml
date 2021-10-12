@@ -120,7 +120,7 @@ jobs:
           content: ${{ env.BIN_NAME }}
           entrypoint: |
             /${{ env.BIN_NAME }}
-          port: ${{ env.CONTAINER_PORT }}
+          port: ${{ env.APP_PORT }}
 
       # Push the built image to our image registry so it can be pulled into the OpenShift cluster.
       - name: Push to Quay
