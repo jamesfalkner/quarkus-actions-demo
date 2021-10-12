@@ -116,7 +116,7 @@ jobs:
           image: ${{ env.APP_NAME }}
           tags: ${{ env.IMAGE_TAGS }}
           oci: true
-          base-image: quay.io/quarkus/quarkus-distroless-image:1.0
+          base-image: registry.access.redhat.com/ubi8/ubi-minimal
           content: ${{ env.BIN_NAME }}
           entrypoint: |
             /${{ env.BIN_NAME }}
