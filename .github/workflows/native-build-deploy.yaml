@@ -119,7 +119,7 @@ jobs:
           base-image: registry.access.redhat.com/ubi8/ubi-minimal
           content: ${{ env.BIN_NAME }}
           entrypoint: |
-            /${{ env.BIN_NAME }}
+            /bin/bash -c 'chmod a+x /${{ env.BIN_NAME }} && /${{ env.BIN_NAME }}'
           port: ${{ env.CONTAINER_PORT }}
 
       # Push the built image to our image registry so it can be pulled into the OpenShift cluster.
