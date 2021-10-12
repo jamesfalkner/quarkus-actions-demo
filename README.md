@@ -8,7 +8,7 @@ If you want to learn more about Quarkus, please visit its website: https://quark
 
 # Prereqs
 
-You'll need:
+To run this demo you'll need:
 
 - An OpenShift 4.x server running somewhere, publicly accessible (You can get a free one through the [Red Hat Developer Sandbox](https://developers.redhat.com/developer-sandbox) )
 - Your OpenShift login credentials (username and token)
@@ -18,7 +18,7 @@ You'll need:
 
 # Running the demo
 
-To run this, first clone the repo, then:
+You'll need to first fork this repo, then setup secrets, and finally modify the GitHub Actions workflow file. Here's how:
 
 ## Secrets
 
