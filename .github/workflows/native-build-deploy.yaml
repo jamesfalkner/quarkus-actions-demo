@@ -114,10 +114,10 @@ jobs:
           image: ${{ env.APP_NAME }}
           tags: ${{ env.IMAGE_TAGS }}
           oci: true
-          base-image: registry.access.redhat.com/ubi8/ubi-micro
+          base-image: quay.io/quarkus/quarkus-distroless-image
           content: ${{ env.BIN_NAME }}
           entrypoint: |
-            ${{ env.BIN_NAME }}
+            /${{ env.BIN_NAME }}
           port: ${{ env.CONTAINER_PORT }}
 
       # Push the built image to our image registry so it can be pulled into the OpenShift cluster.
@@ -164,7 +164,7 @@ jobs:
         id: oc-new-app
         uses: redhat-actions/oc-new-app@v1
         with:
-          app_name: ${{ env.APP_NAME }}-${{ env.COMMIT_SHA }}
+          app_name: ${{ env.APP_NAME }}
           port: ${{ env.APP_PORT }}
           namespace: ${{ env.TEST_NAMESPACE }}
           image: ${{ env.IMAGE_PATH }}
