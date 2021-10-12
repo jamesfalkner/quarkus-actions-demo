@@ -143,7 +143,9 @@ jobs:
     env:
       IMAGE_PATH: ${{ needs.build-push-image.outputs.registry-path }}
       COMMIT_SHA: ${{ needs.compile.outputs.commit_sha }}
-
+    environment:
+      name: demo_environment
+      url: ${{ steps.oc-new-app.outputs.route }}
     steps:
       - uses: actions/checkout@v2
 
