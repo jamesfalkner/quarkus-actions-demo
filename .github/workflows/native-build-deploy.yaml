@@ -106,7 +106,7 @@ jobs:
         with:
           name: ${{ env.BIN_NAME }}
 
-      - run: chmod a+x /${{ env.BIN_NAME }}
+      - run: chmod a+x ${{ env.BIN_NAME }}
 
       # Use buildah to build the application image with the jar inside.
       - name: Build Image
