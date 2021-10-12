@@ -1,6 +1,8 @@
 # quarkus-actions-demo Project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project demonstrates an example GitHub workflow for building native Quarkus applications, containerizing using [Buildah](https://buildah.io), pushing to [Quay](https://quay.io) and then deploying to [OpenShift](https://openshift.com). This can be modified to fit your CI/CD needs.
+
+This project uses Quarkus, the Supersonic Subatomic Java Framework, and builds a native executable with [Mandrel](https://github.com/graalvm/mandrel) for stunningly fast performance and tiny footprint.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
@@ -37,3 +39,12 @@ In your fork, update the `.github/workflows/native-build-deploy.yaml` as follows
 
 Push those changes to your repository and it should trigger the workflow to build and deploy the app to OpenShift!
 
+## Access app
+
+The URL to your running app on OpenShift is shown on the GitHub Actions summary:
+
+![Actions](.img/console.png)
+
+Alternatively, you'll also see the running app on the OpenShift Web Console:
+
+![Actions](.img/action-url.png)
