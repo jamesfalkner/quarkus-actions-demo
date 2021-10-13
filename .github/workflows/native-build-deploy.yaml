@@ -7,7 +7,6 @@ env:
   TEST_NAMESPACE: jfalkner1-dev
   APP_NAME: quarkus-actions-demo
   APP_PORT: 8080
-  TEAR_DOWN: false
 
 jobs:
   #####################################################################################################################
@@ -100,6 +99,10 @@ jobs:
     env:
       BIN_NAME: ${{ needs.compile.outputs.binname }}
       IMAGE_TAGS: latest ${{ needs.compile.outputs.commit_sha }}
+    environment:
+      name: demo_environment
+      url: ${{ steps.push-to-quay.outputs.registry-path }}
+
     steps:
       # Download the jar artifact from the compile step
       - uses: actions/download-artifact@v2
@@ -157,8 +160,6 @@ jobs:
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
           openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          # openshift_username:
-          # openshift_password:
           insecure_skip_tls_verify: true
           namespace: ${{ env.TEST_NAMESPACE }}
 
@@ -185,9 +186,7 @@ jobs:
           warning_on_retry: false
           # Just check that the root endpoint returns a success status (-f flag).
           command: curl -sSfLi ${{ steps.oc-new-app.outputs.route }}
-
-      # Clean up the resources we deployed, even if there was an error above.
-      - name: Delete deployment that was created
-        if: always() && env.TEAR_DOWN == 'true'
-        run:
-          oc delete all --selector=${{ steps.oc-new-app.outputs.selector }}
+      
+      # Add the Quarkus icon to the deployment
+      - name: Label deployment
+        run: oc label deployment --selector=${{ steps.oc-new-app.outputs.selector }} app.openshift.io/runtime=quarkus
