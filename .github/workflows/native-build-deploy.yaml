@@ -3,6 +3,7 @@ on: [ push, workflow_dispatch ]
 
 env:
   REGISTRY_USER: jfalkner1
+  MANDREL_VERSION: 21.2.0.1
   IMAGE_REGISTRY: quay.io
   TEST_NAMESPACE: jfalkner1-dev
   APP_NAME: quarkus-actions-demo
@@ -24,29 +25,32 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    # If none of these files has changed, we assume that the contents of .m2/repository can be fetched from the cache.
-    - name: Hash Maven files
-      run: |
-        echo "MVN_HASH=${{ hashFiles('pom.xml', '.mvn/**/*', 'mvnw*') }}" >> $GITHUB_ENV
-
     # Download the m2 repository from the cache to speed up the build.
-    - name: Check for Maven cache
+    - name: Cache and Restore Maven Artifacts
       id: check-mvn-cache
       uses: actions/cache@v2
       with:
         path: ${{ env.MVN_REPO_DIR }}
-        key: ${{ env.MVN_HASH }}
+        key: ${{ hashFiles('pom.xml', '.mvn/**/*', 'mvnw*') }}
+
+    - name: Cache and Restore Mandrel distro
+      id: check-mandrel-cache
+      uses: actions/cache@v2
+      with:
+        path: ~/java_package.tar.gz
+        key: mandrel-distro-${MANDREL_VERSION}
 
     - name: Download Mandrel
+      if: steps.check-mandrel-cache.outputs.cache-hit != 'true'
       run: |
-        download_url="https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.2.0/graalvm-ce-java11-linux-amd64-21.2.0.tar.gz"
-        wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
-
+        download_url="https://github.com/graalvm/mandrel/releases/download/mandrel-${MANDREL_VERSION}-Final/mandrel-java11-linux-amd64-${MANDREL_VERSION}-Final.tar.gz"
+        wget -O ~/java_package.tar.gz $download_url
+      
     - name: Setup Maven+OpenJDK Distro
       uses: actions/setup-java@v2
       with:
         distribution: 'jdkfile'
-        jdkFile: ${{ runner.temp }}/java_package.tar.gz
+        jdkFile: ~/java_package.tar.gz
         java-version: '11.0.0'
         architecture: x64
 
@@ -62,14 +66,6 @@ jobs:
 
     - name: Compile Native Binary
       run: mvn -ntp -B package -DskipTests -Pnative
-
-    # If there was no cache hit above, store the output into the cache now.
-    - name: Save Maven repo into cache
-      if: ${{ steps.check-mvn-cache.outputs.cache-hit }} != 'true'
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.MVN_REPO_DIR }}
-        key: ${{ env.MVN_HASH }}
 
     # Store the output native binary into the env for reuse below.
     # It will contain, eg. "quarkus-actions-demo-1.0.0-SNAPSHOT-runner"
