@@ -41,7 +41,8 @@ jobs:
         download_url="https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.2.0/graalvm-ce-java11-linux-amd64-21.2.0.tar.gz"
         wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
 
-    - uses: actions/setup-java@v2
+    - name: Setup Maven+OpenJDK Distro
+      uses: actions/setup-java@v2
       with:
         distribution: 'jdkfile'
         jdkFile: ${{ runner.temp }}/java_package.tar.gz
@@ -59,7 +60,7 @@ jobs:
       run: mvn -ntp -B clean compile verify
 
     - name: Compile Native Binary
-    - run: mvn -ntp -B package -DskipTests -Pnative
+      run: mvn -ntp -B package -DskipTests -Pnative
 
     # If there was no cache hit above, store the output into the cache now.
     - name: Save Maven repo into cache
