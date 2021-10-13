@@ -9,16 +9,11 @@ env:
   APP_PORT: 8080
 
 jobs:
-  #####################################################################################################################
-  ## The compile job compiles the application into a native executable, and uploads it as an artifact for the next job to use.
-  compile:
-    name: Compile
+
+  test:
+    name: Run tests
     runs-on: ubuntu-20.04
-    outputs:
-      binname: ${{ steps.get-binname.outputs.binname }}
-      commit_sha: ${{ steps.commit-data.outputs.short_sha }}
     env:
-      TARGET_DIR: target/
       MVN_REPO_DIR: ~/.m2/repository
     steps:
     - uses: actions/checkout@v2
@@ -36,7 +31,7 @@ jobs:
         path: ${{ env.MVN_REPO_DIR }}
         key: ${{ env.MVN_HASH }}
 
-    - name: Download Mandrel
+    - name: Download OpenJDK and Mandrel
       run: |
         download_url="https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.2.0/graalvm-ce-java11-linux-amd64-21.2.0.tar.gz"
         wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
@@ -48,13 +43,11 @@ jobs:
         java-version: '11.0.0'
         architecture: x64
 
-    - name: Setup Mandrel
-      run: |
-        sudo apt install g++ zlib1g-dev libfreetype6-dev && gu install native-image
+    - name: Output Java Version
+      run: java -version
 
-    - run: java -version
-
-    - run: mvn -ntp -B package -DskipTests -Pnative
+    - name: Run tests
+      run: mvn -ntp -B clean compile verify
 
     # If there was no cache hit above, store the output into the cache now.
     - name: Save Maven repo into cache
@@ -63,6 +56,26 @@ jobs:
       with:
         path: ${{ env.MVN_REPO_DIR }}
         key: ${{ env.MVN_HASH }}
+
+  #####################################################################################################################
+  ## The compile job compiles the application into a native executable, and uploads it as an artifact for the next job to use.
+  compile:
+    name: Compile Native Executable
+    runs-on: ubuntu-20.04
+    needs: test
+    outputs:
+      binname: ${{ steps.get-binname.outputs.binname }}
+      commit_sha: ${{ steps.commit-data.outputs.short_sha }}
+    env:
+      TARGET_DIR: target/
+      MVN_REPO_DIR: ~/.m2/repository
+    steps:
+
+    - name: Setup Mandrel
+      run: sudo apt install g++ zlib1g-dev libfreetype6-dev && gu install native-image
+
+    - name: Compile executable with Mandrel
+      run: mvn -ntp -B package -DskipTests -Pnative
 
     # Store the output native binary into the env for reuse below.
     # It will contain, eg. "quarkus-actions-demo-1.0.0-SNAPSHOT-runner"
