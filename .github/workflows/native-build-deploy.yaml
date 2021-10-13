@@ -14,6 +14,7 @@ jobs:
   compile:
     name: Test and Compile
     runs-on: ubuntu-20.04
+    environment: Internal Job
     outputs:
       binname: ${{ steps.get-binname.outputs.binname }}
       commit_sha: ${{ steps.commit-data.outputs.short_sha }}
@@ -108,7 +109,7 @@ jobs:
       IMAGE_TAGS: latest ${{ needs.compile.outputs.commit_sha }}
     environment:
       name: Quay.io
-      url: ${{ steps.push-to-quay.outputs.registry-path }}
+      url: https://${{ steps.push-to-quay.outputs.registry-path }}
 
     steps:
       # Download the jar artifact from the compile step
