@@ -39,6 +39,10 @@ In your fork, update the `.github/workflows/native-build-deploy.yaml` as follows
 
 Push those changes to your repository and it should trigger the workflow to build and deploy the app to OpenShift!
 
+You will see the jobs progressing on the **Actions** tab of your repo:
+
+![Actions](.img/progress.png)
+
 ## Access app
 
 The URL to your running app on OpenShift is shown on the GitHub Actions summary:
