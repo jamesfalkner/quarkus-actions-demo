@@ -100,8 +100,8 @@ jobs:
       BIN_NAME: ${{ needs.compile.outputs.binname }}
       IMAGE_TAGS: latest ${{ needs.compile.outputs.commit_sha }}
     environment:
-      name: demo_environment
-      url: ${{ steps.push-to-quay.outputs.registry-path }}
+      name: Quay
+      url: https://${{ steps.push-to-quay.outputs.registry-path }}
 
     steps:
       # Download the jar artifact from the compile step
@@ -147,7 +147,7 @@ jobs:
       IMAGE_PATH: ${{ needs.build-push-image.outputs.registry-path }}
       COMMIT_SHA: ${{ needs.compile.outputs.commit_sha }}
     environment:
-      name: demo_environment
+      name: OpenShift
       url: ${{ steps.oc-new-app.outputs.route }}
     steps:
       - uses: actions/checkout@v2
