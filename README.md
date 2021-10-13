@@ -1,4 +1,6 @@
-# quarkus-actions-demo Project
+# Quarkus Native with GitHub Actions
+
+[![Quarkus Native CI/CD workflow](https://github.com/jamesfalkner/quarkus-actions-demo/actions/workflows/native-build-deploy.yaml/badge.svg)](https://github.com/jamesfalkner/quarkus-actions-demo/actions/workflows/native-build-deploy.yaml)
 
 This project demonstrates an example GitHub workflow for building native Quarkus applications, containerizing using [Buildah](https://buildah.io), pushing to [Quay](https://quay.io) and then deploying to [OpenShift](https://openshift.com). This can be modified to fit your CI/CD needs.
 
