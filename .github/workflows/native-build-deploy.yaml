@@ -44,7 +44,7 @@ jobs:
       if: steps.check-mandrel-cache.outputs.cache-hit != 'true'
       run: |
         download_url="https://github.com/graalvm/mandrel/releases/download/mandrel-${MANDREL_VERSION}-Final/mandrel-java11-linux-amd64-${MANDREL_VERSION}-Final.tar.gz"
-        wget -O ${{ env.RUNNER_TEMP }}/java_package.tar.gz $download_url
+        wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
       
     - name: Setup Maven+OpenJDK Distro
       uses: actions/setup-java@v2
