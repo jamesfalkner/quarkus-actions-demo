@@ -34,7 +34,13 @@ jobs:
     - name: Download OpenJDK and Mandrel
       run: |
         download_url="https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.2.0/graalvm-ce-java11-linux-amd64-21.2.0.tar.gz"
-        wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
+        wget -q -O $RUNNER_TEMP/java_package.tar.gz $download_url
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: mandrel-distro
+        path: $RUNNER_TEMP/java_package.tar.gz 
+        if-no-files-found: error
 
     - uses: actions/setup-java@v2
       with:
@@ -70,6 +76,19 @@ jobs:
       TARGET_DIR: target/
       MVN_REPO_DIR: ~/.m2/repository
     steps:
+
+    - name: Get stored Mandrel disro
+      uses: actions/download-artifact@v2
+      with:
+        name: mandrel-disto
+        path: $RUNNER_TEMP/java_package.tar.gz
+
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'jdkfile'
+        jdkFile: ${{ runner.temp }}/java_package.tar.gz
+        java-version: '11.0.0'
+        architecture: x64
 
     - name: Setup Mandrel
       run: sudo apt install g++ zlib1g-dev libfreetype6-dev && gu install native-image
