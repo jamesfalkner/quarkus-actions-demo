@@ -77,10 +77,10 @@ jobs:
       MVN_REPO_DIR: ~/.m2/repository
     steps:
 
-    - name: Get stored Mandrel disro
+    - name: Get stored Mandrel distro
       uses: actions/download-artifact@v2
       with:
-        name: mandrel-disto
+        name: mandrel-distro
         path: $RUNNER_TEMP/java_package.tar.gz
 
     - uses: actions/setup-java@v2
