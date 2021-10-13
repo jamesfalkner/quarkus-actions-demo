@@ -81,7 +81,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: mandrel-distro
-        path: $RUNNER_TEMP/java_package.tar.gz
+        path: ${{ runner.temp }}/java_package.tar.gz
 
     - uses: actions/setup-java@v2
       with:
