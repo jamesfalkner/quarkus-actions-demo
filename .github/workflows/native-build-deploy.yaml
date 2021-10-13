@@ -44,7 +44,7 @@ jobs:
       if: steps.check-mandrel-cache.outputs.cache-hit != 'true'
       run: |
         download_url="https://github.com/graalvm/mandrel/releases/download/mandrel-${MANDREL_VERSION}-Final/mandrel-java11-linux-amd64-${MANDREL_VERSION}-Final.tar.gz"
-        wget -O java_package.tar.gz $download_url
+        wget -q -O java_package.tar.gz $download_url
       
     - name: Setup Maven+OpenJDK Distro
       uses: actions/setup-java@v2
@@ -53,10 +53,6 @@ jobs:
         jdkFile: java_package.tar.gz
         java-version: '11.0.0'
         architecture: x64
-
-    - name: Setup Mandrel
-      run: |
-        sudo apt install g++ zlib1g-dev libfreetype6-dev && gu install native-image
 
     - name: Output Java Version
       run: java -version
